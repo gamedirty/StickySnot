@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * The container to combine your content views with a snot monitor;
- * <p>
+ * <p/>
  * your content view should be a part of this container;
  *
  * @author zjh
@@ -29,7 +29,7 @@ public class SnotPanel extends RelativeLayout {
 
     /**
      * The monitor to show the selected snot.
-     * react to the finger event
+     * react to the finger event,show different pictures;
      */
     private SnotMonitor snotMonitor;
 
@@ -75,8 +75,16 @@ public class SnotPanel extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent event) {
         int ex = (int) event.getRawX();
         int ey = (int) event.getRawY();
+        int action = event.getAction();
 
-
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
         return super.onTouchEvent(event);
     }
 }

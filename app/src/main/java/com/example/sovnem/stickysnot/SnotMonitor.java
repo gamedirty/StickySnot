@@ -102,6 +102,7 @@ public class SnotMonitor extends View {
 
     /**
      * 爆炸动画
+     * Play a boom animation,when your finger left the screen and the specified view should be dismissed;
      */
     public void playBoomAnimation() {
 
