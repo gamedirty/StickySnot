@@ -9,6 +9,7 @@ import android.view.View;
 
 /**
  * Some utilities;
+ * 一些工具方法
  *
  * @author zjh
  * @description

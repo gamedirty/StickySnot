@@ -103,6 +103,7 @@ public class SnotMonitor extends View {
     /**
      * 爆炸动画
      * Play a boom animation,when your finger left the screen and the specified view should be dismissed;
+     * the  boom animation can be a series of picture or a common animation of android views.
      */
     public void playBoomAnimation() {
 
