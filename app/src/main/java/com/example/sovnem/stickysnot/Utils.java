@@ -2,7 +2,6 @@ package com.example.sovnem.stickysnot;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.view.View;
@@ -21,6 +20,7 @@ public class Utils {
      * Convert a view to a bitmap object;
      *
      * @param target the view to be converted
+     *
      * @return
      */
     public static Bitmap convert2Bitmap(View target) {
@@ -32,6 +32,7 @@ public class Utils {
      * Get the phone's status bar height
      *
      * @param act
+     *
      * @return
      */
     public static int getStatusBarHeight(Activity act) {
@@ -45,6 +46,7 @@ public class Utils {
      * Return the actionbar height of the phone;
      *
      * @param act
+     *
      * @return
      */
     public static int getActionBarHeight(Activity act) {
@@ -60,6 +62,7 @@ public class Utils {
      * Return extra height of phone,contains actionbar' height and status bar's height
      *
      * @param act
+     *
      * @return
      */
     public static int getExtraHeight(Activity act) {
@@ -68,8 +71,11 @@ public class Utils {
 
     /**
      * Return the darken color of a bitmap;
+     * <p/>
+     * 5点取样法
      *
      * @param bitmap
+     *
      * @return
      */
     public static int getDarkColorOf(Bitmap bitmap) {
@@ -80,6 +86,7 @@ public class Utils {
      * Get the lighten color of a bitmap;
      *
      * @param bitmap
+     *
      * @return
      */
     public static int getLightenColorOf(Bitmap bitmap) {
