@@ -3,7 +3,10 @@ package com.example.sovnem.stickysnot;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 /**
@@ -19,13 +22,14 @@ public class Utils {
     /**
      * Convert a view to a bitmap object;
      *
-     * @param target the view to be converted
+     * @param view the view to be converted
      *
      * @return
      */
-    public static Bitmap convert2Bitmap(View target) {
-
-        return null;
+    public static Bitmap convert2Bitmap(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        view.draw(new Canvas(bitmap));
+        return bitmap;
     }
 
     /**
@@ -93,4 +97,11 @@ public class Utils {
         return 2;
     }
 
+    public static int getBackgroundOf(View view) {
+        Drawable bg = view.getBackground();
+        if (bg instanceof ColorDrawable) {
+            return ((ColorDrawable) bg).getColor();
+        }
+        return 0;
+    }
 }

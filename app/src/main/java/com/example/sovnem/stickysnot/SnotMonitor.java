@@ -70,6 +70,7 @@ public class SnotMonitor extends View {
         if (null == viewBitmap) {
             viewBitmap = Utils.convert2Bitmap(snotBall);
             cache.put(snotBall.toString(), viewBitmap);
+            L.i("缓存起来view的bitmap转换视图");
         }
 
         //由基础尺寸衍生而来的必要尺寸
@@ -83,7 +84,7 @@ public class SnotMonitor extends View {
         SAFE_DISTANCE = ORIR * 5;
 
         //鼻涕颜色值 由bitmap5点取样而来
-        SNOTCOLOR = Utils.getLightenColorOf(viewBitmap);
+        SNOTCOLOR = Utils.getBackgroundOf(snotBall);
     }
 
     private void initPaint() {
@@ -94,6 +95,7 @@ public class SnotMonitor extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        L.i("snotview ---ondraw");
         if (isAnimating) {
             drawFrame(canvas);
         } else {
@@ -103,6 +105,7 @@ public class SnotMonitor extends View {
 
     /**
      * draw frames of animation
+     * 画动画的一帧
      *
      * @param canvas
      */
@@ -130,6 +133,7 @@ public class SnotMonitor extends View {
         initPaint();
         DOWNX = fingerX = eX;
         DOWNY = fingerY = eY;
+
     }
 
     /**

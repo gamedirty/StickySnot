@@ -54,8 +54,10 @@ public class SnotPanel extends RelativeLayout {
 
     /**
      * 设置activity的根布局
+     *
      * @param activity
      * @param layoutId
+     *
      * @return
      */
     public static SnotPanel attachToWindow(Activity activity, int layoutId) {
@@ -111,21 +113,27 @@ public class SnotPanel extends RelativeLayout {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+
                 mSelectedSnot = getSelectSnot(ex, ey);
+
                 if (null != mSelectedSnot) {
+                    L.i("dispatchTouchEvent   ACTION_DOWN");
                     snotMonitor.handleFingerDown(ex, ey, mSelectedSnot);
+
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (null != mSelectedSnot) {
                     snotMonitor.handleFingerMove(ex, ey);
+                    L.i("dispatchTouchEvent   ACTION_MOVE");
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (null != mSelectedSnot) {
                     snotMonitor.handleFingerUp(ex, ey);
+                    L.i("dispatchTouchEvent   ACTION_UP");
                     return true;
                 }
                 break;
