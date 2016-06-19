@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.sovnem.stickysnot.TestActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.example.sovnem.stickysnot.TestActivity">
 
     <com.example.sovnem.stickysnot.RoundBgTextview
+        android:id="@+id/snot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="60dp"
-        android:background="#6787d1"
-        android:id="@+id/snot"
-        android:text="Hello World!" />
+        android:layout_centerInParent="true"
+        android:background="#f73f15"
+        android:paddingLeft="9dp"
+        android:paddingRight="9dp"
+        android:textSize="25dp"
+        android:textColor="#ffffff"
+        android:text="99+"/>
 </RelativeLayout>

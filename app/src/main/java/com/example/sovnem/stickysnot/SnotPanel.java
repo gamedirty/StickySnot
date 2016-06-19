@@ -52,6 +52,8 @@ public class SnotPanel extends RelativeLayout {
         }
     }
 
+    private int EXH;
+
     /**
      * 设置activity的根布局
      *
@@ -67,6 +69,12 @@ public class SnotPanel extends RelativeLayout {
         snotPanel.addView(new SnotMonitor(activity), new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         activity.setContentView(snotPanel);
         return snotPanel;
+    }
+
+    private int getExH(SnotPanel snotPanel) {
+        int[] xy = new int[2];
+        snotPanel.getLocationInWindow(xy);
+        return xy[1];
     }
 
     /**
@@ -93,8 +101,14 @@ public class SnotPanel extends RelativeLayout {
     public View getSelectSnot(int eX, int eY) {
         for (View snot : snots) {
             int[] loc = new int[2];
-            snot.getLocationOnScreen(loc);
-            if (eX >= loc[0] && eX <= loc[0] + snot.getWidth() && eY >= loc[1] && eY <= loc[1] + snot.getHeight()) {
+
+            L.s("snot的尺寸:", snot.getWidth(), snot.getHeight());
+            snot.getLocationInWindow(loc);
+            loc[1] -= EXH;
+            L.s("snot的空间位置:", loc[0], loc[1]);
+            boolean isIN = eX >= loc[0] && eX <= loc[0] + snot.getWidth() && eY >= loc[1] && eY <= loc[1] + snot.getHeight();
+            L.i("是不是命中:" + isIN);
+            if (isIN) {
                 return snot;
             }
         }
@@ -108,19 +122,23 @@ public class SnotPanel extends RelativeLayout {
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int ex = (int) ev.getRawX();
-        int ey = (int) ev.getRawY();
+        int ex = (int) ev.getX();
+        int ey = (int) ev.getY();
+        L.i("按下:(" + ex + "," + ey + ")");
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-
+                EXH = getExH(this);
+                L.i("多余高度是：" + EXH);
                 mSelectedSnot = getSelectSnot(ex, ey);
 
                 if (null != mSelectedSnot) {
                     L.i("dispatchTouchEvent   ACTION_DOWN");
-                    snotMonitor.handleFingerDown(ex, ey, mSelectedSnot);
+                    snotMonitor.handleFingerDown(ex, ey, mSelectedSnot,EXH);
 
                     return true;
+                } else {
+                    L.i("没有命中");
                 }
                 break;
             case MotionEvent.ACTION_MOVE:

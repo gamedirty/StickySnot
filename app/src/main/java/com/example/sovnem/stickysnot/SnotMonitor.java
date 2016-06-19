@@ -52,6 +52,9 @@ public class SnotMonitor extends View {
     private float DOWNX, DOWNY;
     private Bitmap viewBitmap;
     private MiniBitmapMemaryCache cache;
+    private int w, h;//绘制图形的尺寸
+    private View currentSnot;
+    private int EXH;
 
     public SnotMonitor(Context context) {
         super(context);
@@ -61,9 +64,12 @@ public class SnotMonitor extends View {
     private void initializeParams(int eX, int eY, View snotBall) {
         //基础尺寸
         int[] locs = new int[2];
-        snotBall.getLocationInWindow(locs);
-        int w = snotBall.getWidth();
-        int h = snotBall.getHeight();
+        currentSnot = snotBall;
+        snotBall.getLocationOnScreen(locs);
+        w = snotBall.getWidth();
+        h = snotBall.getHeight();
+        L.i("被选中的snot的位置：" + "(" + locs[0] + "," + locs[1] + "),尺寸是:w:" + w + ",h:" + h);
+
 
         //绘制主体的处理
         viewBitmap = cache.get(snotBall.toString());
@@ -83,8 +89,12 @@ public class SnotMonitor extends View {
         MAX_DISTANCE = ORIR * 6;
         SAFE_DISTANCE = ORIR * 5;
 
+
         //鼻涕颜色值 由bitmap5点取样而来
         SNOTCOLOR = Utils.getBackgroundOf(snotBall);
+
+        L.i("鼻涕的颜色:" + SNOTCOLOR);
+
     }
 
     private void initPaint() {
@@ -119,6 +129,35 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawSnot(Canvas canvas) {
+        drawStickyPoint(canvas);
+        drawStickyLine(canvas);
+        drawMovingPart(canvas);
+    }
+
+    /**
+     * 画出 跟随手指移动的部分
+     *
+     * @param canvas
+     */
+    private void drawMovingPart(Canvas canvas) {
+        L.i("画移动部分");
+        canvas.drawBitmap(viewBitmap, fingerX - w / 2, fingerY - h / 2, snotPaint);
+    }
+
+    /**
+     * 画中间的连接线
+     *
+     * @param canvas
+     */
+    private void drawStickyLine(Canvas canvas) {
+    }
+
+    /**
+     * 画黏住的固定的部分
+     *
+     * @param canvas
+     */
+    private void drawStickyPoint(Canvas canvas) {
 
     }
 
@@ -128,12 +167,20 @@ public class SnotMonitor extends View {
      * 处理按下操作
      * copy属性 设置是否显示等
      */
-    public void handleFingerDown(int eX, int eY, View snotBall) {
+    public void handleFingerDown(int eX, int eY, View snotBall, int EXH) {
         initializeParams(eX, eY, snotBall);
         initPaint();
+
+        this.EXH = EXH;
+
+        L.i("handleFingerDown:(" + eX + "," + eY + ")");
         DOWNX = fingerX = eX;
         DOWNY = fingerY = eY;
+        snotBall.setVisibility(View.GONE);
+        setVisibility(View.VISIBLE);
 
+
+        invalidate();
     }
 
     /**
@@ -144,6 +191,8 @@ public class SnotMonitor extends View {
     public void handleFingerMove(int ex, int ey) {
         fingerX = ex;
         fingerY = ey;
+        invalidate();
+        L.i("handleFingerMove:(" + ex + "," + ex + ")");
     }
 
     /**
@@ -153,6 +202,12 @@ public class SnotMonitor extends View {
     public void handleFingerUp(int ex, int ey) {
         fingerX = ex;
         fingerY = ey;
+        setVisibility(View.GONE);
+        if (currentSnot != null) {
+            currentSnot.setVisibility(View.VISIBLE);
+        }
+        L.i("handleFingerUp:(" + ex + "," + ex + ")");
+        invalidate();
     }
 
 

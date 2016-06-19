@@ -101,7 +101,11 @@ public class Utils {
         Drawable bg = view.getBackground();
         if (bg instanceof ColorDrawable) {
             return ((ColorDrawable) bg).getColor();
+        } else {
+            Bitmap b = convert2Bitmap(view);
+            int color = b.getPixel(b.getWidth() / 2, 0);
+            b.recycle();
+            return color;
         }
-        return 0;
     }
 }

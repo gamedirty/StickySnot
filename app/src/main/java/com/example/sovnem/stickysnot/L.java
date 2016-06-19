@@ -18,4 +18,12 @@ public class L {
     public static void i(String msg) {
         if (isDebug) Log.i("zhjh", msg);
     }
+
+    public static void s(String msg, int x, int y) {
+        if (isDebug) Log.i("zhjh", msg + "(" + x + "," + y + ")");
+    }
+
+    public static void s(String msg, int[] locs) {
+        if (isDebug) Log.i("zhjh", msg + "(" + locs[0] + "," + locs[1] + ")");
+    }
 }
