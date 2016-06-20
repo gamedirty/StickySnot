@@ -26,4 +26,8 @@ public class L {
     public static void s(String msg, int[] locs) {
         if (isDebug) Log.i("zhjh", msg + "(" + locs[0] + "," + locs[1] + ")");
     }
+
+    public static void s(String msg, float x, float y) {
+        if (isDebug) Log.i("zhjhs", msg + "(" + x + "," + y + ")");
+    }
 }

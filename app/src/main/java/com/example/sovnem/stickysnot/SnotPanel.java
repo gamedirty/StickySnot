@@ -132,6 +132,8 @@ public class SnotPanel extends RelativeLayout {
                 L.i("多余高度是：" + EXH);
                 mSelectedSnot = getSelectSnot(ex, ey);
 
+
+
                 if (null != mSelectedSnot) {
                     L.i("dispatchTouchEvent   ACTION_DOWN");
                     snotMonitor.handleFingerDown(ex, ey, mSelectedSnot,EXH);

@@ -108,4 +108,38 @@ public class Utils {
             return color;
         }
     }
+
+    /**
+     * 得到两点之间的距离
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
+    public static double getDistance(float x1, float y1, float x2, float y2) {
+        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    }
+
+
+    /**
+     * 求出 点(x1,y1)和点(x2,y2)两点连线与x轴相交形成的锐角的余弦
+     *
+     * @param x1
+     *            第一个点的x坐标
+     * @param y1
+     *            第一个点的y坐标
+     * @param x2
+     *            第二个点的x坐标
+     * @param y2
+     *            第二个点的y坐标
+     * @return
+     */
+    public static double getCons(float x1, float y1, float x2, float y2) {
+        double dis = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+        double side1 = Math.abs(y1 - y2);
+        double cos = side1 / dis;
+        return cos;
+    }
 }

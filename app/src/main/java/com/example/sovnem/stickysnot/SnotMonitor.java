@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Parcelable;
 import android.view.View;
 
@@ -55,22 +56,21 @@ public class SnotMonitor extends View {
     private int w, h;//绘制图形的尺寸
     private View currentSnot;
     private int EXH;
+    private Path path;
 
     public SnotMonitor(Context context) {
         super(context);
         cache = new MiniBitmapMemaryCache();
     }
 
-    private void initializeParams(int eX, int eY, View snotBall) {
+    private void initializeParams(View snotBall) {
         //基础尺寸
         int[] locs = new int[2];
         currentSnot = snotBall;
-        snotBall.getLocationOnScreen(locs);
+        snotBall.getLocationInWindow(locs);
         w = snotBall.getWidth();
         h = snotBall.getHeight();
         L.i("被选中的snot的位置：" + "(" + locs[0] + "," + locs[1] + "),尺寸是:w:" + w + ",h:" + h);
-
-
         //绘制主体的处理
         viewBitmap = cache.get(snotBall.toString());
         if (null == viewBitmap) {
@@ -82,7 +82,10 @@ public class SnotMonitor extends View {
         //由基础尺寸衍生而来的必要尺寸
         ORIR = Math.min(w, h) / 2;
         ORIX = locs[0] + w / 2;
-        ORIY = locs[1] + h / 2;
+        ORIY = locs[1] + h / 2 - EXH;
+
+        L.s("原始的view中心点", ORIX, ORIY);
+
         FINGERR = ORIR * 5 / 7;
         ORIRMAX = ORIR;
         ORIRMIN = ORIR * 2 / 5;
@@ -94,7 +97,8 @@ public class SnotMonitor extends View {
         SNOTCOLOR = Utils.getBackgroundOf(snotBall);
 
         L.i("鼻涕的颜色:" + SNOTCOLOR);
-
+        snotBall.setVisibility(View.GONE);
+        setVisibility(View.VISIBLE);
     }
 
     private void initPaint() {
@@ -129,8 +133,10 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawSnot(Canvas canvas) {
-        drawStickyPoint(canvas);
-        drawStickyLine(canvas);
+        if (!hasCut) {
+            drawStickyPoint(canvas);
+            drawStickyLine(canvas);
+        }
         drawMovingPart(canvas);
     }
 
@@ -150,6 +156,44 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawStickyLine(Canvas canvas) {
+        double cos = Utils.getCons(fingerX, fingerY, ORIX, ORIY);
+        double sin = Math.sqrt(1 - cos * cos);
+        double dX1 = newR * cos;
+        double dY1 = newR * sin;
+        double dX2 = FINGERR * cos;
+        double dY2 = FINGERR * sin;
+        Point[] p = new Point[2];
+        Point[] p2 = new Point[2];
+
+        Point[] c = new Point[2];
+        c[0] = new Point((fingerX + ORIX) / 2, (fingerY + ORIY) / 2);
+        c[1] = c[0];
+        if ((fingerY >= ORIY && fingerX <= ORIX) || (fingerY <= ORIY && fingerX >= ORIX)) {
+            p[0] = new Point(ORIX + dX1, ORIY + dY1);
+            p[1] = new Point(ORIX - dX1, ORIY - dY1);
+
+            p2[0] = new Point(fingerX + dX2, fingerY + dY2);
+            p2[1] = new Point(fingerX - dX2, fingerY - dY2);
+
+        } else if (fingerY >= ORIY && fingerX >= ORIX || (fingerY <= ORIY && fingerX <= ORIX)) {
+
+            p[0] = new Point(ORIX - dX1, ORIY + dY1);
+            p[1] = new Point(ORIX + dX1, ORIY - dY1);
+
+            p2[0] = new Point(fingerX - dX2, fingerY + dY2);
+            p2[1] = new Point(fingerX + dX2, fingerY - dY2);
+        }
+
+        if (path == null) {
+            path = new Path();
+        }
+        path.reset();
+        path.moveTo((float) p[0].x, (float) p[0].y);
+        path.quadTo((float) c[0].x, (float) c[0].y, (float) p2[0].x, (float) p2[0].y);
+        path.lineTo((float) p2[1].x, (float) p2[1].y);
+        path.quadTo((float) c[1].x, (float) c[1].y, (float) p[1].x, (float) p[1].y);
+        path.lineTo((float) p[0].x, (float) p[0].y);
+        canvas.drawPath(path, snotPaint);
     }
 
     /**
@@ -158,7 +202,12 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawStickyPoint(Canvas canvas) {
-
+        dist = Utils.getDistance(fingerX, fingerY, ORIX, ORIY);
+        if (dist <= MAX_DISTANCE && !hasCut) {
+            double factor = dist / MAX_DISTANCE;
+            newR = ORIRMAX - (ORIRMAX - ORIRMIN) * factor;
+            canvas.drawCircle(ORIX, ORIY, (float) newR, snotPaint);
+        }
     }
 
 
@@ -168,7 +217,7 @@ public class SnotMonitor extends View {
      * copy属性 设置是否显示等
      */
     public void handleFingerDown(int eX, int eY, View snotBall, int EXH) {
-        initializeParams(eX, eY, snotBall);
+        initializeParams(snotBall);
         initPaint();
 
         this.EXH = EXH;
@@ -176,9 +225,6 @@ public class SnotMonitor extends View {
         L.i("handleFingerDown:(" + eX + "," + eY + ")");
         DOWNX = fingerX = eX;
         DOWNY = fingerY = eY;
-        snotBall.setVisibility(View.GONE);
-        setVisibility(View.VISIBLE);
-
 
         invalidate();
     }
@@ -191,6 +237,10 @@ public class SnotMonitor extends View {
     public void handleFingerMove(int ex, int ey) {
         fingerX = ex;
         fingerY = ey;
+        dist = Utils.getDistance(fingerX, fingerY, ORIX, ORIY);
+        if (dist > MAX_DISTANCE) {
+            hasCut = true;
+        }
         invalidate();
         L.i("handleFingerMove:(" + ex + "," + ex + ")");
     }
@@ -206,6 +256,7 @@ public class SnotMonitor extends View {
         if (currentSnot != null) {
             currentSnot.setVisibility(View.VISIBLE);
         }
+        hasCut = false;
         L.i("handleFingerUp:(" + ex + "," + ex + ")");
         invalidate();
     }
