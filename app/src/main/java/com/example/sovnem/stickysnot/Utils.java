@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -27,9 +28,17 @@ public class Utils {
      * @return
      */
     public static Bitmap convert2Bitmap(View view) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap((int) (view.getMeasuredWidth() * 1.2f), (int) (view.getMeasuredHeight() * 1.2f), Bitmap.Config.ARGB_8888);
         view.draw(new Canvas(bitmap));
-        return bitmap;
+        return big(bitmap);
+    }
+
+    private static Bitmap big(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postScale(1.03f, 1.03f); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        if (resizeBmp != bitmap) bitmap.recycle();
+        return resizeBmp;
     }
 
     /**
@@ -116,6 +125,7 @@ public class Utils {
      * @param y1
      * @param x2
      * @param y2
+     *
      * @return
      */
     public static double getDistance(float x1, float y1, float x2, float y2) {
@@ -126,14 +136,11 @@ public class Utils {
     /**
      * 求出 点(x1,y1)和点(x2,y2)两点连线与x轴相交形成的锐角的余弦
      *
-     * @param x1
-     *            第一个点的x坐标
-     * @param y1
-     *            第一个点的y坐标
-     * @param x2
-     *            第二个点的x坐标
-     * @param y2
-     *            第二个点的y坐标
+     * @param x1 第一个点的x坐标
+     * @param y1 第一个点的y坐标
+     * @param x2 第二个点的x坐标
+     * @param y2 第二个点的y坐标
+     *
      * @return
      */
     public static double getCons(float x1, float y1, float x2, float y2) {

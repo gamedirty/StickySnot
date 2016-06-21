@@ -1,5 +1,7 @@
 package com.example.sovnem.stickysnot;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcelable;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 
 
 /**
@@ -57,6 +60,8 @@ public class SnotMonitor extends View {
     private View currentSnot;
     private int EXH;
     private Path path;
+    private float recordX, recordY;
+    private Bitmap bitmap;
 
     public SnotMonitor(Context context) {
         super(context);
@@ -212,15 +217,96 @@ public class SnotMonitor extends View {
 
 
     /**
+     * @Description 回弹
+     */
+    private void kickback() {
+        recordX = fingerX;
+        recordY = fingerY;
+        ValueAnimator backAnimator = ValueAnimator.ofFloat((float) dist, 0);
+        OvershootInterpolator inter = new MyQQDragInterprator();
+        // changeTension(inter, 4);
+        backAnimator.setInterpolator(inter);
+        backAnimator.setDuration(KICK_BACK_DURATION);
+        backAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                doWhenKickback(animation);
+            }
+        });
+        backAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                resetVisibilityState();
+                hasCut = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+        });
+        backAnimator.start();
+    }
+
+    private void resetVisibilityState() {
+        setVisibility(View.GONE);
+        if (currentSnot != null) {
+            currentSnot.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void doWhenKickback(ValueAnimator animation) {
+        float value = Float.parseFloat(animation.getAnimatedValue().toString());//
+        final double cos = Utils.getCons(fingerX, fingerY, ORIX, ORIY);
+        final double sin = Math.sqrt(1 - cos * cos);
+        if (recordX >= ORIX && recordY >= ORIY) {
+            fingerX = (float) (ORIX + value * sin);
+            fingerY = (float) (ORIY + value * cos);
+        } else if (recordX < ORIX && recordY > ORIY) {
+            fingerX = (float) (ORIX - value * sin);
+            fingerY = (float) (ORIY + value * cos);
+        } else if (recordX > ORIX && recordY < ORIY) {
+            fingerX = (float) (ORIX + value * sin);
+            fingerY = (float) (ORIY - value * cos);
+        } else {
+            fingerX = (float) (ORIX - value * sin);
+            fingerY = (float) (ORIY - value * cos);
+        }
+        postInvalidate();
+    }
+
+    /**
+     * @author monkey-d-wood
+     * @Description: 回弹的时候的差值器
+     */
+    private class MyQQDragInterprator extends OvershootInterpolator {
+        @Override
+        public float getInterpolation(float t) {
+            t -= 1.0f;
+            float answer1 = (float) Math.sin(Math.PI * 5 / 2 * t) * t;
+            return 1 - answer1;
+        }
+    }
+
+    /**
      * Handle touch down event from snot panel
      * 处理按下操作
      * copy属性 设置是否显示等
      */
     public void handleFingerDown(int eX, int eY, View snotBall, int EXH) {
+        this.EXH = EXH;
         initializeParams(snotBall);
         initPaint();
-
-        this.EXH = EXH;
 
         L.i("handleFingerDown:(" + eX + "," + eY + ")");
         DOWNX = fingerX = eX;
@@ -228,6 +314,7 @@ public class SnotMonitor extends View {
 
         invalidate();
     }
+
 
     /**
      * Handle touch move event from snot panel
@@ -252,23 +339,40 @@ public class SnotMonitor extends View {
     public void handleFingerUp(int ex, int ey) {
         fingerX = ex;
         fingerY = ey;
-        setVisibility(View.GONE);
-        if (currentSnot != null) {
-            currentSnot.setVisibility(View.VISIBLE);
+
+
+        if (!hasCut) {
+            if (dist >= ORIR)
+                kickback();
+            else {
+                resetVisibilityState();
+                hasCut = false;
+            }
+            L.i("回弹");
+        } else {
+            if (dist < SAFE_DISTANCE) {
+                fingerX = ORIX;
+                fingerY = ORIY;
+                hasCut = false;
+                postInvalidate();
+                resetVisibilityState();
+            } else {
+                playBoomAnim();
+            }
         }
-        hasCut = false;
+
+
         L.i("handleFingerUp:(" + ex + "," + ex + ")");
         invalidate();
     }
 
-
     /**
-     * 爆炸动画
-     * Play a boom animation,when your finger left the screen and the specified view should be dismissed;
-     * the  boom animation can be a series of picture or a common animation of android views.
+     * @Description 播放爆炸动画
      */
-    public void playBoomAnimation() {
-
+    private synchronized void playBoomAnim() {
+        resetVisibilityState();
+        hasCut = false;
+        return;
     }
 
 
