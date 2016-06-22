@@ -5,13 +5,14 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
 /**
  * The container to combine your content views with a snot monitor;
- * <p/>
+ * <p>
  * your content view should be a part of this container;
  *
  * @author zjh
@@ -71,6 +72,29 @@ public class SnotPanel extends RelativeLayout {
         return snotPanel;
     }
 
+    /**
+     * 设置activity的根布局
+     *
+     * @param activity
+     *
+     * @return
+     */
+    public static SnotPanel attachToWindow(Activity activity) {
+        SnotPanel snotPanel = new SnotPanel(activity);
+        View content = activity.getWindow().getDecorView();
+        if (content instanceof FrameLayout){
+            FrameLayout fl = (FrameLayout) content;
+        }
+        ViewGroup parent = (ViewGroup) content.getParent();
+        L.i("是空的？:" + (parent == null));
+        int index = parent.indexOfChild(content);
+        parent.removeViewAt(index);
+        snotPanel.addView(content, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        snotPanel.addView(new SnotMonitor(activity), new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        parent.addView(snotPanel);
+        return snotPanel;
+    }
+
     private int getExH(SnotPanel snotPanel) {
         int[] xy = new int[2];
         snotPanel.getLocationInWindow(xy);
@@ -117,7 +141,7 @@ public class SnotPanel extends RelativeLayout {
 
     /**
      * 有被选中的snot 接下来的所有动作都交给view，直到手指起来
-     * <p/>
+     * <p>
      * 如果没有被选中的 则就走开
      */
     @Override
@@ -133,10 +157,9 @@ public class SnotPanel extends RelativeLayout {
                 mSelectedSnot = getSelectSnot(ex, ey);
 
 
-
                 if (null != mSelectedSnot) {
                     L.i("dispatchTouchEvent   ACTION_DOWN");
-                    snotMonitor.handleFingerDown(ex, ey, mSelectedSnot,EXH);
+                    snotMonitor.handleFingerDown(ex, ey, mSelectedSnot, EXH);
 
                     return true;
                 } else {
