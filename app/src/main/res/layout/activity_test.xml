@@ -16,4 +16,17 @@
         android:textSize="25dp"
         android:textColor="#ffffff"
         android:text="99+"/>
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:text="我是粘的"
+        android:padding="10dp"
+        android:id="@+id/rect"
+        android:background="#3ee077"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/snot"
+        android:layout_marginBottom="108dp"/>
+
 </RelativeLayout>

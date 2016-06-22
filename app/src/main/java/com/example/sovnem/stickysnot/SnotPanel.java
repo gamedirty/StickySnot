@@ -82,16 +82,16 @@ public class SnotPanel extends RelativeLayout {
     public static SnotPanel attachToWindow(Activity activity) {
         SnotPanel snotPanel = new SnotPanel(activity);
         View content = activity.getWindow().getDecorView();
-        if (content instanceof FrameLayout){
-            FrameLayout fl = (FrameLayout) content;
+        FrameLayout fl = null;
+        if (content instanceof FrameLayout) {
+            fl = (FrameLayout) content;
         }
-        ViewGroup parent = (ViewGroup) content.getParent();
-        L.i("是空的？:" + (parent == null));
-        int index = parent.indexOfChild(content);
-        parent.removeViewAt(index);
-        snotPanel.addView(content, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        View realContent = fl.getChildAt(0);
+
+        fl.removeView(realContent);
+        snotPanel.addView(realContent, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         snotPanel.addView(new SnotMonitor(activity), new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        parent.addView(snotPanel);
+        fl.addView(snotPanel);
         return snotPanel;
     }
 
@@ -185,4 +185,12 @@ public class SnotPanel extends RelativeLayout {
     }
 
 
+    public void makeViewSoft(int snot) {
+        View sn = findViewById(snot);
+        makeViewSoft(sn);
+    }
+
+    public void boomAs(int[] resIds) {
+
+    }
 }

@@ -17,7 +17,7 @@ import android.view.animation.OvershootInterpolator;
  * 1)The snot is dragged and hasn't been pulled apart;
  * 2)The snot is dragged and has been pulled apart but your finger hasn't left it;
  * 3)Your finger has left the snot alone,the snot is playing an boom animation;
- * <p/>
+ * <p>
  * where the content of the view shows on the screen
  *
  * @author zjh
@@ -26,7 +26,7 @@ import android.view.animation.OvershootInterpolator;
  */
 public class SnotMonitor extends View {
 
-    private final long KICK_BACK_DURATION = 200;// 鼻涕回弹的时长 单位ms
+    private final long KICK_BACK_DURATION = 175;// 鼻涕回弹的时长 单位ms
     private final int BOOM_DURATION = 300;// 爆炸效果时长
     public float ORIX, ORIY;// “钉住”的鼻涕部分的中心点
     private int ORIR;// “钉住”的鼻涕部分的中心点
@@ -77,7 +77,7 @@ public class SnotMonitor extends View {
         h = snotBall.getHeight();
         L.i("被选中的snot的位置：" + "(" + locs[0] + "," + locs[1] + "),尺寸是:w:" + w + ",h:" + h);
         //绘制主体的处理
-        viewBitmap = cache.get(snotBall.toString());
+        viewBitmap = (Bitmap) cache.get(snotBall.toString());
         if (null == viewBitmap) {
             viewBitmap = Utils.convert2Bitmap(snotBall);
             cache.put(snotBall.toString(), viewBitmap);
@@ -102,7 +102,7 @@ public class SnotMonitor extends View {
         SNOTCOLOR = Utils.getBackgroundOf(snotBall);
 
         L.i("鼻涕的颜色:" + SNOTCOLOR);
-        snotBall.setVisibility(View.GONE);
+        snotBall.setVisibility(View.INVISIBLE);
         setVisibility(View.VISIBLE);
     }
 
@@ -189,6 +189,8 @@ public class SnotMonitor extends View {
             p2[1] = new Point(fingerX + dX2, fingerY - dY2);
         }
 
+
+
         if (path == null) {
             path = new Path();
         }
@@ -259,7 +261,7 @@ public class SnotMonitor extends View {
     }
 
     private void resetVisibilityState() {
-        setVisibility(View.GONE);
+        setVisibility(View.INVISIBLE);
         if (currentSnot != null) {
             currentSnot.setVisibility(View.VISIBLE);
         }
@@ -342,7 +344,7 @@ public class SnotMonitor extends View {
 
 
         if (!hasCut) {
-            if (dist >= ORIR)
+            if (dist >= ORIR *1.5)
                 kickback();
             else {
                 resetVisibilityState();
