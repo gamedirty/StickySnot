@@ -1,9 +1,11 @@
 package com.example.sovnem.stickysnot;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -17,7 +19,7 @@ import android.view.animation.OvershootInterpolator;
  * 1)The snot is dragged and hasn't been pulled apart;
  * 2)The snot is dragged and has been pulled apart but your finger hasn't left it;
  * 3)Your finger has left the snot alone,the snot is playing an boom animation;
- * <p>
+ * <p/>
  * where the content of the view shows on the screen
  *
  * @author zjh
@@ -62,6 +64,7 @@ public class SnotMonitor extends View {
     private Path path;
     private float recordX, recordY;
     private Bitmap bitmap;
+    private int[] imgs;
 
     public SnotMonitor(Context context) {
         super(context);
@@ -129,6 +132,8 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawFrame(Canvas canvas) {
+        if (bitmap != null)
+            canvas.drawBitmap(bitmap, fingerX - ORIR, fingerY - ORIR, snotPaint);
     }
 
     /**
@@ -188,7 +193,6 @@ public class SnotMonitor extends View {
             p2[0] = new Point(fingerX - dX2, fingerY + dY2);
             p2[1] = new Point(fingerX + dX2, fingerY - dY2);
         }
-
 
 
         if (path == null) {
@@ -287,6 +291,10 @@ public class SnotMonitor extends View {
         postInvalidate();
     }
 
+    public void setBoomSrc(int[] resids) {
+        this.imgs = resids;
+    }
+
     /**
      * @author monkey-d-wood
      * @Description: 回弹的时候的差值器
@@ -344,7 +352,7 @@ public class SnotMonitor extends View {
 
 
         if (!hasCut) {
-            if (dist >= ORIR *1.5)
+            if (dist >= ORIR * 1.5)
                 kickback();
             else {
                 resetVisibilityState();
@@ -372,9 +380,31 @@ public class SnotMonitor extends View {
      * @Description 播放爆炸动画
      */
     private synchronized void playBoomAnim() {
-        resetVisibilityState();
-        hasCut = false;
-        return;
+        isAnimating = true;
+        ValueAnimator boomAnim = ValueAnimator.ofInt(0, imgs.length - 1);
+        boomAnim.setDuration(BOOM_DURATION);
+        boomAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int id = Integer.parseInt(animation.getAnimatedValue().toString());
+                bitmap = BitmapFactory.decodeResource(getResources(), imgs[id]);
+                postInvalidate();
+            }
+        });
+
+        boomAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isAnimating = false;
+                setVisibility(View.GONE);
+                fingerX = ORIX;
+                fingerY = ORIY;
+                hasCut = false;
+            }
+        });
+        boomAnim.start();
     }
 
 

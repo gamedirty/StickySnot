@@ -11,8 +11,9 @@ public class TestActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test);
         SnotPanel root = SnotPanel.attachToWindow(this);
-
+        root.setBoomSrc(new int[]{R.drawable.idp, R.drawable.idq, R.drawable.idr, R.drawable.ids, R.drawable.idt});
         root.makeViewSoft(R.id.snot);
         root.makeViewSoft(R.id.rect);
+        root.makeViewSoft(R.id.lalalal);
     }
 }

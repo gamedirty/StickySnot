@@ -193,4 +193,8 @@ public class SnotPanel extends RelativeLayout {
     public void boomAs(int[] resIds) {
 
     }
+
+    public void setBoomSrc(int... resids) {
+        snotMonitor.setBoomSrc(resids);
+    }
 }
