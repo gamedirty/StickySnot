@@ -1,4 +1,4 @@
-package com.example.sovnem.stickysnot;
+package com.gamedirty.snotviewlib;
 
 /**
  * 方便管理坐标

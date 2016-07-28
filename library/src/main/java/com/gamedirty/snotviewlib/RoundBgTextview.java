@@ -1,4 +1,4 @@
-package com.example.sovnem.stickysnot;
+package com.gamedirty.snotviewlib;
 
 import android.content.Context;
 import android.graphics.Canvas;

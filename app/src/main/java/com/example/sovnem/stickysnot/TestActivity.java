@@ -3,6 +3,8 @@ package com.example.sovnem.stickysnot;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.gamedirty.snotviewlib.SnotPanel;
+
 public class TestActivity extends AppCompatActivity {
 
     @Override
@@ -11,5 +13,6 @@ public class TestActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test);
         SnotPanel root = SnotPanel.attachToWindow(this);
+        root.makeViewSoft(this, R.id.snot);
     }
 }

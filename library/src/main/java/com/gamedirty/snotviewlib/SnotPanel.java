@@ -1,18 +1,17 @@
-package com.example.sovnem.stickysnot;
+package com.gamedirty.snotviewlib;
 
 import android.app.Activity;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
 /**
  * The container to combine your content views with a snot monitor;
- * <p>
+ * <p/>
  * your content view should be a part of this container;
  *
  * @author zjh
@@ -60,7 +59,6 @@ public class SnotPanel extends RelativeLayout {
      *
      * @param activity
      * @param layoutId
-     *
      * @return
      */
     public static SnotPanel attachToWindow(Activity activity, int layoutId) {
@@ -76,22 +74,17 @@ public class SnotPanel extends RelativeLayout {
      * 设置activity的根布局
      *
      * @param activity
-     *
      * @return
      */
     public static SnotPanel attachToWindow(Activity activity) {
         SnotPanel snotPanel = new SnotPanel(activity);
-        View content = activity.getWindow().getDecorView();
-        if (content instanceof FrameLayout){
-            FrameLayout fl = (FrameLayout) content;
-        }
-        ViewGroup parent = (ViewGroup) content.getParent();
-        L.i("是空的？:" + (parent == null));
-        int index = parent.indexOfChild(content);
-        parent.removeViewAt(index);
-        snotPanel.addView(content, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
+        View child = parent.getChildAt(0);
+        parent.removeView(child);
+        snotPanel.addView(child, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         snotPanel.addView(new SnotMonitor(activity), new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         parent.addView(snotPanel);
+
         return snotPanel;
     }
 
@@ -113,16 +106,20 @@ public class SnotPanel extends RelativeLayout {
         snots.add(view);
     }
 
+    public void makeViewSoft(Activity act, int snotId) {
+        makeViewSoft(act.findViewById(snotId));
+    }
+
 
     /**
      * Get the snot monitor if  one of the snot views has been touched.
      *
      * @param eX
      * @param eY
-     *
      * @return
      */
     public View getSelectSnot(int eX, int eY) {
+        if (null == snots) return null;
         for (View snot : snots) {
             int[] loc = new int[2];
 
@@ -141,7 +138,7 @@ public class SnotPanel extends RelativeLayout {
 
     /**
      * 有被选中的snot 接下来的所有动作都交给view，直到手指起来
-     * <p>
+     * <p/>
      * 如果没有被选中的 则就走开
      */
     @Override
