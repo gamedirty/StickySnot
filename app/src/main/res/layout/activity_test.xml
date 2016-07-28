@@ -13,7 +13,32 @@
         android:background="#f73f15"
         android:paddingLeft="9dp"
         android:paddingRight="9dp"
-        android:textSize="25dp"
+        android:text="99+"
         android:textColor="#ffffff"
-        android:text="99+"/>
+        android:textSize="25dp"/>
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/rect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="108dp"
+        android:layout_toStartOf="@+id/snot"
+        android:background="#3ee077"
+        android:padding="10dp"
+        android:text="我是粘的"/>
+
+    <com.example.sovnem.stickysnot.RoundBgTextview
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#3ee077"
+        android:paddingLeft="3dp"
+        android:id="@+id/lalalal"
+        android:paddingRight="3dp"
+        android:text="15"
+        android:layout_above="@+id/snot"
+        android:layout_toStartOf="@+id/snot"
+        android:layout_marginBottom="111dp"/>
+
 </RelativeLayout>

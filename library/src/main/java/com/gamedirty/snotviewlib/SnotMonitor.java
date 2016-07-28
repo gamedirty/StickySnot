@@ -1,9 +1,11 @@
 package com.gamedirty.snotviewlib;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -26,7 +28,7 @@ import android.view.animation.OvershootInterpolator;
  */
 public class SnotMonitor extends View {
 
-    private final long KICK_BACK_DURATION = 200;// 鼻涕回弹的时长 单位ms
+    private final long KICK_BACK_DURATION = 175;// 鼻涕回弹的时长 单位ms
     private final int BOOM_DURATION = 300;// 爆炸效果时长
     public float ORIX, ORIY;// “钉住”的鼻涕部分的中心点
     private int ORIR;// “钉住”的鼻涕部分的中心点
@@ -62,6 +64,7 @@ public class SnotMonitor extends View {
     private Path path;
     private float recordX, recordY;
     private Bitmap bitmap;
+    private int[] imgs;
 
     public SnotMonitor(Context context) {
         super(context);
@@ -77,7 +80,7 @@ public class SnotMonitor extends View {
         h = snotBall.getHeight();
         L.i("被选中的snot的位置：" + "(" + locs[0] + "," + locs[1] + "),尺寸是:w:" + w + ",h:" + h);
         //绘制主体的处理
-        viewBitmap = cache.get(snotBall.toString());
+        viewBitmap = (Bitmap) cache.get(snotBall.toString());
         if (null == viewBitmap) {
             viewBitmap = Utils.convert2Bitmap(snotBall);
             cache.put(snotBall.toString(), viewBitmap);
@@ -102,7 +105,7 @@ public class SnotMonitor extends View {
         SNOTCOLOR = Utils.getBackgroundOf(snotBall);
 
         L.i("鼻涕的颜色:" + SNOTCOLOR);
-        snotBall.setVisibility(View.GONE);
+        snotBall.setVisibility(View.INVISIBLE);
         setVisibility(View.VISIBLE);
     }
 
@@ -129,6 +132,8 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawFrame(Canvas canvas) {
+        if (bitmap != null)
+            canvas.drawBitmap(bitmap, fingerX - ORIR, fingerY - ORIR, snotPaint);
     }
 
     /**
@@ -188,6 +193,7 @@ public class SnotMonitor extends View {
             p2[0] = new Point(fingerX - dX2, fingerY + dY2);
             p2[1] = new Point(fingerX + dX2, fingerY - dY2);
         }
+
 
         if (path == null) {
             path = new Path();
@@ -259,7 +265,7 @@ public class SnotMonitor extends View {
     }
 
     private void resetVisibilityState() {
-        setVisibility(View.GONE);
+        setVisibility(View.INVISIBLE);
         if (currentSnot != null) {
             currentSnot.setVisibility(View.VISIBLE);
         }
@@ -283,6 +289,10 @@ public class SnotMonitor extends View {
             fingerY = (float) (ORIY - value * cos);
         }
         postInvalidate();
+    }
+
+    public void setBoomSrc(int[] resids) {
+        this.imgs = resids;
     }
 
     /**
@@ -342,7 +352,7 @@ public class SnotMonitor extends View {
 
 
         if (!hasCut) {
-            if (dist >= ORIR)
+            if (dist >= ORIR * 1.5)
                 kickback();
             else {
                 resetVisibilityState();
@@ -370,9 +380,31 @@ public class SnotMonitor extends View {
      * @Description 播放爆炸动画
      */
     private synchronized void playBoomAnim() {
-        resetVisibilityState();
-        hasCut = false;
-        return;
+        isAnimating = true;
+        ValueAnimator boomAnim = ValueAnimator.ofInt(0, imgs.length - 1);
+        boomAnim.setDuration(BOOM_DURATION);
+        boomAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int id = Integer.parseInt(animation.getAnimatedValue().toString());
+                bitmap = BitmapFactory.decodeResource(getResources(), imgs[id]);
+                postInvalidate();
+            }
+        });
+
+        boomAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isAnimating = false;
+                setVisibility(View.GONE);
+                fingerX = ORIX;
+                fingerY = ORIY;
+                hasCut = false;
+            }
+        });
+        boomAnim.start();
     }
 
 
