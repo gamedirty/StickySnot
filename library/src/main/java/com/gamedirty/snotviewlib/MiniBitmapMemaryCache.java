@@ -34,6 +34,10 @@ public class MiniBitmapMemaryCache {
     }
 
     public Bitmap get(String key) {
-        return cache.get(key).get();
+        if (null!=cache.get(key)){
+            return cache.get(key).get();
+        }
+        else return null;
+
     }
 }

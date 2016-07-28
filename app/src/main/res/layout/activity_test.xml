@@ -5,7 +5,7 @@
                 android:layout_height="match_parent"
                 tools:context="com.example.sovnem.stickysnot.TestActivity">
 
-    <com.example.sovnem.stickysnot.RoundBgTextview
+    <com.gamedirty.snotviewlib.RoundBgTextview
         android:id="@+id/snot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:padding="10dp"
         android:text="我是粘的"/>
 
-    <com.example.sovnem.stickysnot.RoundBgTextview
+    <com.gamedirty.snotviewlib.RoundBgTextview
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#3ee077"

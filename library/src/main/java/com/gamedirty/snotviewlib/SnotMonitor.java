@@ -380,6 +380,13 @@ public class SnotMonitor extends View {
      * @Description 播放爆炸动画
      */
     private synchronized void playBoomAnim() {
+        if (imgs == null || imgs.length == 0){
+            setVisibility(View.GONE);
+            fingerX = ORIX;
+            fingerY = ORIY;
+            hasCut = false;
+            return;
+        }
         isAnimating = true;
         ValueAnimator boomAnim = ValueAnimator.ofInt(0, imgs.length - 1);
         boomAnim.setDuration(BOOM_DURATION);
