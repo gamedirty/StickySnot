@@ -123,12 +123,9 @@ public class SnotPanel extends RelativeLayout {
         for (View snot : snots) {
             int[] loc = new int[2];
 
-            L.s("snot的尺寸:", snot.getWidth(), snot.getHeight());
             snot.getLocationInWindow(loc);
             loc[1] -= EXH;
-            L.s("snot的空间位置:", loc[0], loc[1]);
             boolean isIN = eX >= loc[0] && eX <= loc[0] + snot.getWidth() && eY >= loc[1] && eY <= loc[1] + snot.getHeight();
-            L.i("是不是命中:" + isIN);
             if (isIN) {
                 return snot;
             }
@@ -145,35 +142,29 @@ public class SnotPanel extends RelativeLayout {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int ex = (int) ev.getX();
         int ey = (int) ev.getY();
-        L.i("按下:(" + ex + "," + ey + ")");
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 EXH = getExH(this);
-                L.i("多余高度是：" + EXH);
                 mSelectedSnot = getSelectSnot(ex, ey);
 
 
                 if (null != mSelectedSnot) {
-                    L.i("dispatchTouchEvent   ACTION_DOWN");
                     snotMonitor.handleFingerDown(ex, ey, mSelectedSnot, EXH);
 
                     return true;
                 } else {
-                    L.i("没有命中");
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (null != mSelectedSnot) {
                     snotMonitor.handleFingerMove(ex, ey);
-                    L.i("dispatchTouchEvent   ACTION_MOVE");
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (null != mSelectedSnot) {
                     snotMonitor.handleFingerUp(ex, ey);
-                    L.i("dispatchTouchEvent   ACTION_UP");
                     return true;
                 }
                 break;
