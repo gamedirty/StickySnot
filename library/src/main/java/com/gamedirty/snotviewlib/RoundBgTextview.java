@@ -73,7 +73,6 @@ public class RoundBgTextview extends TextView {
         super.onSizeChanged(w, h, oldw, oldh);
         this.w = w;
         this.h = h;
-        L.i("snotview onSizeChanged");
         invalidate();
     }
 
@@ -82,7 +81,6 @@ public class RoundBgTextview extends TextView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        L.i("snotview onMeasure");
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         if (width < height) {

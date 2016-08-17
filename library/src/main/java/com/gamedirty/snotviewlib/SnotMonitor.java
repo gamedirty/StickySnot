@@ -78,13 +78,11 @@ public class SnotMonitor extends View {
         snotBall.getLocationInWindow(locs);
         w = snotBall.getWidth();
         h = snotBall.getHeight();
-        L.i("被选中的snot的位置：" + "(" + locs[0] + "," + locs[1] + "),尺寸是:w:" + w + ",h:" + h);
         //绘制主体的处理
         viewBitmap = (Bitmap) cache.get(snotBall.toString());
         if (null == viewBitmap) {
             viewBitmap = Utils.convert2Bitmap(snotBall);
             cache.put(snotBall.toString(), viewBitmap);
-            L.i("缓存起来view的bitmap转换视图");
         }
 
         //由基础尺寸衍生而来的必要尺寸
@@ -104,7 +102,6 @@ public class SnotMonitor extends View {
         //鼻涕颜色值 由bitmap5点取样而来
         SNOTCOLOR = Utils.getBackgroundOf(snotBall);
 
-        L.i("鼻涕的颜色:" + SNOTCOLOR);
         snotBall.setVisibility(View.INVISIBLE);
         setVisibility(View.VISIBLE);
     }
@@ -117,7 +114,6 @@ public class SnotMonitor extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        L.i("snotview ---ondraw");
         if (isAnimating) {
             drawFrame(canvas);
         } else {
@@ -156,7 +152,6 @@ public class SnotMonitor extends View {
      * @param canvas
      */
     private void drawMovingPart(Canvas canvas) {
-        L.i("画移动部分");
         canvas.drawBitmap(viewBitmap, fingerX - w / 2, fingerY - h / 2, snotPaint);
     }
 
@@ -317,8 +312,6 @@ public class SnotMonitor extends View {
         this.EXH = EXH;
         initializeParams(snotBall);
         initPaint();
-
-        L.i("handleFingerDown:(" + eX + "," + eY + ")");
         DOWNX = fingerX = eX;
         DOWNY = fingerY = eY;
 
@@ -339,7 +332,6 @@ public class SnotMonitor extends View {
             hasCut = true;
         }
         invalidate();
-        L.i("handleFingerMove:(" + ex + "," + ex + ")");
     }
 
     /**
@@ -358,7 +350,6 @@ public class SnotMonitor extends View {
                 resetVisibilityState();
                 hasCut = false;
             }
-            L.i("回弹");
         } else {
             if (dist < SAFE_DISTANCE) {
                 fingerX = ORIX;
@@ -370,9 +361,6 @@ public class SnotMonitor extends View {
                 playBoomAnim();
             }
         }
-
-
-        L.i("handleFingerUp:(" + ex + "," + ex + ")");
         invalidate();
     }
 
