@@ -3,8 +3,9 @@ package com.gamedirty.snotviewlib;
 import android.util.Log;
 
 /**
- * Created by sovnem on 16/6/19,11:08.
+ * Created by sovnem on 16/6/19,11:08,23:04.
  */
+@SuppressWarnings({"ALL", "WeakerAccess"})
 public class L {
 
     private static final boolean isDebug = true;

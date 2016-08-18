@@ -51,8 +51,7 @@ public class Utils {
     public static int getStatusBarHeight(Activity act) {
         Rect frame = new Rect();
         act.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
-        return statusBarHeight;
+        return frame.top;
     }
 
     /**
@@ -146,7 +145,6 @@ public class Utils {
     public static double getCons(float x1, float y1, float x2, float y2) {
         double dis = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         double side1 = Math.abs(y1 - y2);
-        double cos = side1 / dis;
-        return cos;
+        return side1 / dis;
     }
 }

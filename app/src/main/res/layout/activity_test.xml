@@ -15,11 +15,11 @@
         android:paddingRight="9dp"
         android:text="99+"
         android:textColor="#ffffff"
-        android:textSize="25dp"/>
+        android:textSize="25dp"
+        tools:ignore="HardcodedText"/>
 
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/rect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -27,7 +27,8 @@
         android:layout_toStartOf="@+id/snot"
         android:background="#3ee077"
         android:padding="10dp"
-        android:text="我是粘的"/>
+        android:text="我是粘的"
+        tools:ignore="HardcodedText"/>
 
     <com.gamedirty.snotviewlib.RoundBgTextview
         android:layout_width="wrap_content"
@@ -39,6 +40,7 @@
         android:text="15"
         android:layout_above="@+id/snot"
         android:layout_toStartOf="@+id/snot"
-        android:layout_marginBottom="111dp"/>
+        android:layout_marginBottom="111dp"
+        tools:ignore="HardcodedText"/>
 
 </RelativeLayout>

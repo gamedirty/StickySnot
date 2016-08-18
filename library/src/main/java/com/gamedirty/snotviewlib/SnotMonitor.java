@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -26,14 +25,14 @@ import android.view.animation.OvershootInterpolator;
  * @description
  * @date 16/6/2.
  */
+@SuppressWarnings("JavaDoc")
 public class SnotMonitor extends View {
 
-    private final long KICK_BACK_DURATION = 175;// 鼻涕回弹的时长 单位ms
-    private final int BOOM_DURATION = 300;// 爆炸效果时长
-    public float ORIX, ORIY;// “钉住”的鼻涕部分的中心点
+    private float ORIX;
+    private float ORIY;// “钉住”的鼻涕部分的中心点
     private int ORIR;// “钉住”的鼻涕部分的中心点
 
-    public int MAX_DISTANCE;// 最大距离 超过这个距离鼻涕被扯断
+    private int MAX_DISTANCE;// 最大距离 超过这个距离鼻涕被扯断
 
     private float fingerX, fingerY;// 手指按住的点 坐标
     private int FINGERR;// 拖出来的园的半径
@@ -53,18 +52,17 @@ public class SnotMonitor extends View {
     private float RECORDY;//
 
     private double SAFE_DISTANCE;// 安全距离
-    volatile boolean hasCut;// 鼻涕是不是被扯断
+    private volatile boolean hasCut;// 鼻涕是不是被扯断
     private boolean isAnimating;
-    private float DOWNX, DOWNY;
     private Bitmap viewBitmap;
-    private MiniBitmapMemaryCache cache;
+    private final MiniBitmapMemaryCache cache;
     private int w, h;//绘制图形的尺寸
     private View currentSnot;
     private int EXH;
     private Path path;
     private float recordX, recordY;
     private Bitmap bitmap;
-    private int[] imgs;
+    private int[] imgs=new int[] { R.drawable.idp, R.drawable.idq, R.drawable.idr, R.drawable.ids, R.drawable.idt };
 
     public SnotMonitor(Context context) {
         super(context);
@@ -79,7 +77,7 @@ public class SnotMonitor extends View {
         w = snotBall.getWidth();
         h = snotBall.getHeight();
         //绘制主体的处理
-        viewBitmap = (Bitmap) cache.get(snotBall.toString());
+        viewBitmap = cache.get(snotBall.toString());
         if (null == viewBitmap) {
             viewBitmap = Utils.convert2Bitmap(snotBall);
             cache.put(snotBall.toString(), viewBitmap);
@@ -127,6 +125,7 @@ public class SnotMonitor extends View {
      *
      * @param canvas
      */
+    @SuppressWarnings("JavaDoc")
     private void drawFrame(Canvas canvas) {
         if (bitmap != null)
             canvas.drawBitmap(bitmap, fingerX - ORIR, fingerY - ORIR, snotPaint);
@@ -138,6 +137,7 @@ public class SnotMonitor extends View {
      *
      * @param canvas
      */
+    @SuppressWarnings("JavaDoc")
     private void drawSnot(Canvas canvas) {
         if (!hasCut) {
             drawStickyPoint(canvas);
@@ -151,6 +151,7 @@ public class SnotMonitor extends View {
      *
      * @param canvas
      */
+    @SuppressWarnings("JavaDoc")
     private void drawMovingPart(Canvas canvas) {
         canvas.drawBitmap(viewBitmap, fingerX - w / 2, fingerY - h / 2, snotPaint);
     }
@@ -160,6 +161,7 @@ public class SnotMonitor extends View {
      *
      * @param canvas
      */
+    @SuppressWarnings("JavaDoc")
     private void drawStickyLine(Canvas canvas) {
         double cos = Utils.getCons(fingerX, fingerY, ORIX, ORIY);
         double sin = Math.sqrt(1 - cos * cos);
@@ -207,6 +209,7 @@ public class SnotMonitor extends View {
      *
      * @param canvas
      */
+    @SuppressWarnings("JavaDoc")
     private void drawStickyPoint(Canvas canvas) {
         dist = Utils.getDistance(fingerX, fingerY, ORIX, ORIY);
         if (dist <= MAX_DISTANCE && !hasCut) {
@@ -227,6 +230,7 @@ public class SnotMonitor extends View {
         OvershootInterpolator inter = new MyQQDragInterprator();
         // changeTension(inter, 4);
         backAnimator.setInterpolator(inter);
+        long KICK_BACK_DURATION = 175;
         backAnimator.setDuration(KICK_BACK_DURATION);
         backAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -266,7 +270,7 @@ public class SnotMonitor extends View {
         }
     }
 
-    protected void doWhenKickback(ValueAnimator animation) {
+    private void doWhenKickback(ValueAnimator animation) {
         float value = Float.parseFloat(animation.getAnimatedValue().toString());//
         final double cos = Utils.getCons(fingerX, fingerY, ORIX, ORIY);
         final double sin = Math.sqrt(1 - cos * cos);
@@ -312,8 +316,8 @@ public class SnotMonitor extends View {
         this.EXH = EXH;
         initializeParams(snotBall);
         initPaint();
-        DOWNX = fingerX = eX;
-        DOWNY = fingerY = eY;
+        float DOWNX = fingerX = eX;
+        float DOWNY = fingerY = eY;
 
         invalidate();
     }
@@ -377,6 +381,7 @@ public class SnotMonitor extends View {
         }
         isAnimating = true;
         ValueAnimator boomAnim = ValueAnimator.ofInt(0, imgs.length - 1);
+        int BOOM_DURATION = 300;
         boomAnim.setDuration(BOOM_DURATION);
         boomAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -403,15 +408,4 @@ public class SnotMonitor extends View {
     }
 
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        //TODO:啦啦啦
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        //TODO:啦啦啦
-    }
 }

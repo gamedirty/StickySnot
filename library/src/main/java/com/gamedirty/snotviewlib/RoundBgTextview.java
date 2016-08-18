@@ -37,14 +37,14 @@ public class RoundBgTextview extends TextView {
     }
 
     @Override
-    public void setBackgroundDrawable(Drawable d) {
-        if (!(d instanceof ColorDrawable)) {
+    public void setBackground(Drawable background) {
+        if (!(background instanceof ColorDrawable)) {
             throw new RuntimeException("This textview's background should be the type of ColorDrawable");
         }
-        ColorDrawable cd = (ColorDrawable) d;
+        ColorDrawable cd = (ColorDrawable) background;
         bgColor = cd.getColor();
         invalidate();
-        super.setBackgroundDrawable(null);
+        super.setBackground(null);
     }
 
     public int getBgColor() {
@@ -76,7 +76,7 @@ public class RoundBgTextview extends TextView {
         invalidate();
     }
 
-    int dif;
+    private int dif;
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
