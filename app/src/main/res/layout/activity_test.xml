@@ -41,4 +41,12 @@
         android:layout_toStartOf="@+id/snot"
         android:layout_marginBottom="111dp"/>
 
+
+    <Button
+        android:onClick="showPop"
+        android:text="看menu"
+        android:layout_marginLeft="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
