@@ -90,7 +90,6 @@ public class SnotMonitor extends View {
         ORIX = locs[0] + w / 2;
         ORIY = locs[1] + h / 2 - EXH;
 
-        L.s("原始的view中心点", ORIX, ORIY);
 
         FINGERR = ORIR * 5 / 7;
         ORIRMAX = ORIR;
