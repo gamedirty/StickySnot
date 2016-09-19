@@ -10,5 +10,6 @@ package com.gamedirty.snotviewlib;
 			this.y = y;
 		}
 
-		double x, y;
+		final double x;
+	final double y;
 	}

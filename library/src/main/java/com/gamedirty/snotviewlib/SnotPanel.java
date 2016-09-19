@@ -35,7 +35,7 @@ public class SnotPanel extends RelativeLayout {
      */
     private SnotMonitor snotMonitor;
 
-    private Context mContext;
+    private final Context mContext;
 
     public SnotPanel(Context context) {
         super(context);
@@ -153,7 +153,6 @@ public class SnotPanel extends RelativeLayout {
                     snotMonitor.handleFingerDown(ex, ey, mSelectedSnot, EXH);
 
                     return true;
-                } else {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:

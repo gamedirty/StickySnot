@@ -6,9 +6,9 @@ import android.util.LruCache;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by sovnem on 16/6/5,00:34.
+ * Created by sovnem on 16/6/5,00:34,23:05.
  */
-public class MiniBitmapMemaryCache {
+class MiniBitmapMemaryCache {
     /**
      * The size of cache
      * bitmap缓存的大小
@@ -17,7 +17,7 @@ public class MiniBitmapMemaryCache {
     /**
      * Cache for bitmaps to be drawn.the key is the resource id of the view ,and the value is the bitmap which is created from view;
      */
-    private LruCache<String, WeakReference<Bitmap>> cache;
+    private final LruCache<String, WeakReference<Bitmap>> cache;
 
     public MiniBitmapMemaryCache() {
         cache = new LruCache<String, WeakReference<Bitmap>>(MAX_CACHE_SIZE) {
