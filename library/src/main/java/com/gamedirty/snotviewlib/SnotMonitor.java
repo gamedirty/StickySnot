@@ -64,7 +64,7 @@ public class SnotMonitor extends View {
     private Path path;
     private float recordX, recordY;
     private Bitmap bitmap;
-    private int[] imgs;
+    private int[] imgs = new int[]{R.drawable.idp, R.drawable.idq, R.drawable.idr, R.drawable.ids, R.drawable.idt};
 
     public SnotMonitor(Context context) {
         super(context);
@@ -368,7 +368,7 @@ public class SnotMonitor extends View {
      * @Description 播放爆炸动画
      */
     private synchronized void playBoomAnim() {
-        if (imgs == null || imgs.length == 0){
+        if (imgs == null || imgs.length == 0) {
             setVisibility(View.GONE);
             fingerX = ORIX;
             fingerY = ORIY;
