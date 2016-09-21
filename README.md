@@ -1,7 +1,7 @@
 # StickySnot
 If you want to make your views sticky and can be dragged like snot eh...And this library will show you a some way.
 
-this can make you view behave like this:
+It can make you view behave like this:
 
 
 ![image](https://github.com/gamedirty/StickySnot/blob/master/gif/gif.gif?raw=true)
@@ -23,7 +23,7 @@ Add it in your root build.gradle at the end of repositories:
 	        compile 'com.github.gamedirty:StickySnot:2.1'
 	}
 
-then all you need is write few code to make your view lively。
+then all you need is write few codes to make your view lively。
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
