@@ -35,3 +35,8 @@ then all you need is write few codes to make your view lively。
         root.makeViewSoft(this,R.id.rect);
     }
     
+
+
+原理说明地址
+
+http://blog.csdn.net/u012293381/article/details/47059737
